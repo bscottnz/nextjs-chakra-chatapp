@@ -1,5 +1,7 @@
 import Head from 'next/head';
 
+import { useColorMode } from '@chakra-ui/color-mode';
+
 import { Flex, Stack, Box } from '@chakra-ui/layout';
 import { Button, Center } from '@chakra-ui/react';
 import { ChatIcon } from '@chakra-ui/icons';
@@ -7,6 +9,8 @@ import { ChatIcon } from '@chakra-ui/icons';
 import { auth, provider } from '../firebaseconfig';
 
 const Login = () => {
+  const { colorMode } = useColorMode();
+
   const signIn = () => {
     auth.signInWithPopup(provider).catch(alert);
   };
@@ -21,7 +25,7 @@ const Login = () => {
         // w="250px"
         p={16}
         align="center"
-        bg="gray.700"
+        bg={colorMode === 'light' ? 'gray.600' : 'gray.700'}
         borderRadius="3xl"
         boxShadow="0px 4px 14px -3px rgba(0,0,0,0.7)"
       >
@@ -33,7 +37,7 @@ const Login = () => {
           boxShadow="md"
           _hover={{ boxShadow: 'lg' }}
         >
-          <ChatIcon w="100px" h="100px" />
+          <ChatIcon w="100px" h="100px" color="white" />
         </Box>
         <Button boxShadow="md" _hover={{ boxShadow: 'lg' }} onClick={signIn}>
           Sign in with Google

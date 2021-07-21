@@ -3,10 +3,25 @@ import { Avatar, IconButton, Button, Input, InputGroup, InputLeftElement } from 
 import { ChatIcon, ChevronDownIcon, MoonIcon, SunIcon, Search2Icon } from '@chakra-ui/icons';
 import { useColorMode } from '@chakra-ui/color-mode';
 
+import Chat from '../components/Chat';
+
 import * as EmailValidator from 'email-validator';
+import { auth, db } from '../firebaseconfig';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 const Sidebar = () => {
+  const [user] = useAuthState(auth);
+  const userChats = db.collection('chats').where('users', 'array-contains', user.email);
+  const [chatsSnapshot] = useCollection(userChats);
+
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const isExistingChat = (recipient) => {
+    return !!chatsSnapshot?.docs.find(
+      (chat) => chat.data().users.find((user) => user === recipient)?.length > 0
+    );
+  };
 
   const createChat = () => {
     const input = prompt('Enter email address of new chat recipient');
@@ -15,8 +30,10 @@ const Sidebar = () => {
       return null;
     }
 
-    if (EmailValidator.validate(input)) {
-      // add  chat to db
+    if (EmailValidator.validate(input) && input !== user.email && !isExistingChat(input)) {
+      db.collection('chats').add({
+        users: [user.email, input],
+      });
     }
   };
 
@@ -33,7 +50,7 @@ const Sidebar = () => {
         borderBottom="1px solid"
         borderColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
       >
-        <Avatar />
+        <Avatar src={user.photoURL} onClick={() => auth.signOut()} />
         <Stack isInline>
           <IconButton icon={<ChatIcon />} _focus={{ boxShadow: 'none' }} size="sm" isRound />
           <IconButton
@@ -62,6 +79,9 @@ const Sidebar = () => {
           new chat
         </Button>
       </Flex>
+      {chatsSnapshot?.docs.map((chat) => (
+        <Chat key={chat.id} id={chat.id} users={chat.data().users} />
+      ))}
     </Flex>
   );
 };
