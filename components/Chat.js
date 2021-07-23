@@ -34,7 +34,11 @@ const Chat = ({ id, users }) => {
       {recipient ? (
         <Avatar mr={4} src={recipient?.photoURL} name={recipientEmail[0]} />
       ) : (
-        <Avatar mr={4} name={recipientEmail[0]} />
+        <Avatar
+          mr={4}
+          name={recipientEmail[0]}
+          bg={colorMode === 'light' ? 'teal.600' : 'teal.500'}
+        />
       )}
 
       <Text wordBreak="break-word">{recipientEmail}</Text>
