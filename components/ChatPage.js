@@ -21,6 +21,8 @@ import Message from './Message';
 import { useState } from 'react';
 
 import firebase from 'firebase';
+import getOtherEmail from '../utils/getOtherEmail';
+import TimeAgo from 'timeago-react';
 
 const ChatPage = ({ chat, messages }) => {
   const [input, setInput] = useState('');
@@ -30,6 +32,10 @@ const ChatPage = ({ chat, messages }) => {
   const { colorMode } = useColorMode();
   const [messagesSnapshot] = useCollection(
     db.collection('chats').doc(router.query.id).collection('messages').orderBy('timestamp', 'asc')
+  );
+
+  const [recipientSnapshot] = useCollection(
+    db.collection('users').where('email', '==', getOtherEmail(chat.users, user))
   );
 
   const showMessages = () => {
@@ -69,8 +75,16 @@ const ChatPage = ({ chat, messages }) => {
     setInput('');
   };
 
+  const recipientEmail = getOtherEmail(chat.users, user);
+  const recipient = recipientSnapshot?.docs?.[0]?.data();
   return (
-    <Box h="100vh" display="flex" flexDirection="column">
+    <Box
+      h="100vh"
+      display="flex"
+      flexDirection="column"
+      bg={colorMode === 'light' ? 'white' : 'gray.800'}
+      transition="background-color 200ms"
+    >
       <Flex
         align="center"
         position="sticky"
@@ -80,14 +94,28 @@ const ChatPage = ({ chat, messages }) => {
         h={'81px'}
         borderBottom="1px solid"
         borderColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
+        transitionDuration="200ms"
         bg={colorMode === 'light' ? 'white' : 'gray.800'}
       >
-        <Avatar />
+        {recipient ? (
+          <Avatar src={recipient?.photoURL} />
+        ) : (
+          <Avatar name={recipientEmail[0]} bg={colorMode === 'light' ? 'teal.600' : 'teal.500'} />
+        )}
         <Box ml={4} flex={1}>
           <Heading as="h3" size="lg">
-            rec email
+            {recipientEmail}
           </Heading>
-          <Text>last seen...</Text>
+          {recipientSnapshot && (
+            <Text>
+              Last active:{' '}
+              {recipient?.lastActive?.toDate() ? (
+                <TimeAgo datetime={recipient?.lastActive?.toDate()} />
+              ) : (
+                'Unavailable'
+              )}
+            </Text>
+          )}
         </Box>
         <Box>icons</Box>
       </Flex>

@@ -61,6 +61,7 @@ const Sidebar = () => {
         h={'81px'}
         borderBottom="1px solid"
         borderColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
+        transitionDuration="200ms"
         bg={colorMode === 'light' ? 'white' : 'gray.800'}
       >
         <Avatar src={user.photoURL} onClick={() => auth.signOut()} />
@@ -81,6 +82,8 @@ const Sidebar = () => {
         direction="column"
         borderRight="1px solid"
         borderColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
+        bg={colorMode === 'light' ? 'white' : 'gray.800'}
+        transitionDuration="200ms"
         flex="1"
       >
         <Flex direction="column" p={4}>
