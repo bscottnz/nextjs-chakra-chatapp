@@ -18,7 +18,7 @@ import { auth, db } from '../firebaseconfig';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
 import Message from './Message';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import firebase from 'firebase';
 import getOtherEmail from '../utils/getOtherEmail';
@@ -27,8 +27,12 @@ import TimeAgo from 'timeago-react';
 const ChatPage = ({ chat, messages }) => {
   const [input, setInput] = useState('');
 
+  const endOfMessages = useRef(null);
+  const messageBox = useRef(null);
+
   const [user] = useAuthState(auth);
   const router = useRouter();
+
   const { colorMode } = useColorMode();
   const [messagesSnapshot] = useCollection(
     db.collection('chats').doc(router.query.id).collection('messages').orderBy('timestamp', 'asc')
@@ -57,6 +61,24 @@ const ChatPage = ({ chat, messages }) => {
     }
   };
 
+  const scrollBottom = (smooth = true) => {
+    endOfMessages.current.scrollIntoView({
+      behavior: smooth ? 'smooth' : 'auto',
+      block: 'start',
+    });
+  };
+
+  // scroll to bottom of chat when going to new chat page. need to set visibility or else it will flash the
+  // top of the chat before scroll to bottom
+  useEffect(() => {
+    messageBox.current.classList.add('invisible');
+    setTimeout(() => {
+      scrollBottom(false);
+
+      messageBox.current.classList.remove('invisible');
+    }, 0);
+  }, [router.query.id]);
+
   const sendMessage = (e) => {
     e.preventDefault();
     db.collection('users').doc(user.uid).set(
@@ -73,6 +95,8 @@ const ChatPage = ({ chat, messages }) => {
       photoURL: user.photoURL,
     });
     setInput('');
+    setTimeout(scrollBottom, 100);
+    // scrollBottom();
   };
 
   const recipientEmail = getOtherEmail(chat.users, user);
@@ -119,11 +143,35 @@ const ChatPage = ({ chat, messages }) => {
         </Box>
         <Box>icons</Box>
       </Flex>
-      <Box p={6} flex={1}>
+      <Box
+        id="msg-box"
+        p={6}
+        pb={0}
+        flex={1}
+        overflowY="scroll"
+        ref={messageBox}
+        className="invisible"
+        css={{
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+        }}
+      >
         {showMessages()}
-        <Box>{/* scroll target empty div */}</Box>
+        <Box ref={endOfMessages} id="jimmyjohnson">
+          {/* scroll target empty div */}
+        </Box>
       </Box>
-      <FormControl p={2} position="sticky" bottom={0} zIndex={3} as="form">
+      <FormControl
+        p={2}
+        // position="sticky"
+        // bottom={0}
+        zIndex={3}
+        as="form"
+        bg={colorMode === 'light' ? 'white' : 'gray.800'}
+      >
         <Input
           position="sticky"
           bottom={0}

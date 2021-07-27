@@ -13,6 +13,7 @@ import {
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../firebaseconfig';
 import { useColorMode } from '@chakra-ui/color-mode';
+import moment from 'moment';
 
 const Message = ({ user, message }) => {
   const [currentUser] = useAuthState(auth);
@@ -38,6 +39,20 @@ const Message = ({ user, message }) => {
         >
           {' '}
           {message.message}
+          {/* {message.timestamp ? moment(message.timestamp).format('LT') : '...'} */}
+          <Text
+            as="span"
+            as="span"
+            color="gray"
+            p={4}
+            fontSize="9px"
+            position="absolute"
+            bottom="0"
+            textAlign="right"
+            right="0"
+          >
+            {moment(message.timestamp).format('LT')}
+          </Text>
         </Text>
       ) : (
         <Text
@@ -54,6 +69,18 @@ const Message = ({ user, message }) => {
         >
           {' '}
           {message.message}
+          <Text
+            as="span"
+            color="gray"
+            p={4}
+            fontSize="9px"
+            position="absolute"
+            bottom="0"
+            textAlign="right"
+            right="0"
+          >
+            {moment(message.timestamp).format('LT')}
+          </Text>
         </Text>
       )}
     </Box>
