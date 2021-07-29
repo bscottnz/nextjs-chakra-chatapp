@@ -141,7 +141,7 @@ const ChatPage = ({ chat, messages }) => {
             </Text>
           )}
         </Box>
-        <Box>icons</Box>
+        <Box>video</Box>
       </Flex>
       <Box
         id="msg-box"

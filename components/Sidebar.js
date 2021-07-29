@@ -1,10 +1,20 @@
 import { Flex, Stack } from '@chakra-ui/layout';
-import { Avatar, IconButton, Button, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import {
+  Avatar,
+  IconButton,
+  Button,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Icon,
+} from '@chakra-ui/react';
 import { ChatIcon, ChevronDownIcon, MoonIcon, SunIcon, Search2Icon } from '@chakra-ui/icons';
 import { useColorMode } from '@chakra-ui/color-mode';
+import { FiLogOut } from 'react-icons/fi';
 
 import Chat from '../components/Chat';
 
+import { useRouter } from 'next/router';
 import * as EmailValidator from 'email-validator';
 import { auth, db } from '../firebaseconfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -16,6 +26,10 @@ const Sidebar = () => {
   const [chatsSnapshot] = useCollection(userChats);
 
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const router = useRouter();
+
+  console.log(router.query.id);
 
   const isExistingChat = (recipient) => {
     return !!chatsSnapshot?.docs.find(
@@ -63,10 +77,12 @@ const Sidebar = () => {
         borderColor={colorMode === 'light' ? 'gray.200' : 'gray.700'}
         transitionDuration="200ms"
         bg={colorMode === 'light' ? 'white' : 'gray.800'}
+        borderRight={
+          router.query.id ? 'none' : `1px solid ${colorMode === 'light' ? '#E2E8F0' : '#2D3748'}`
+        }
       >
-        <Avatar src={user.photoURL} onClick={() => auth.signOut()} />
+        <Avatar src={user.photoURL} />
         <Stack isInline>
-          <IconButton icon={<ChatIcon />} _focus={{ boxShadow: 'none' }} size="sm" isRound />
           <IconButton
             size="sm"
             isRound
@@ -75,7 +91,13 @@ const Sidebar = () => {
             icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           />
 
-          <IconButton icon={<ChevronDownIcon />} _focus={{ boxShadow: 'none' }} size="sm" isRound />
+          <IconButton
+            onClick={() => auth.signOut()}
+            icon={<Icon as={FiLogOut} />}
+            _focus={{ boxShadow: 'none' }}
+            size="sm"
+            isRound
+          />
         </Stack>
       </Flex>
       <Flex
@@ -87,10 +109,6 @@ const Sidebar = () => {
         flex="1"
       >
         <Flex direction="column" p={4}>
-          <InputGroup mb={4}>
-            <InputLeftElement pointerEvents="none" children={<Search2Icon color="gray.400" />} />
-            <Input type="text" placeholder="Search conversations..." variant="flushed" />
-          </InputGroup>
           <Button
             _focus={{ boxShadow: 'none' }}
             letterSpacing="wide"
