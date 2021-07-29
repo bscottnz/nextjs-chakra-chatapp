@@ -5,6 +5,7 @@ import { useColorMode } from '@chakra-ui/color-mode';
 import { FiLogOut } from 'react-icons/fi';
 
 import Chat from '../components/Chat';
+import firebase from 'firebase';
 
 import { useRouter } from 'next/router';
 import * as EmailValidator from 'email-validator';
@@ -14,14 +15,18 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 
 const Sidebar = () => {
   const [user] = useAuthState(auth);
-  const userChats = db.collection('chats').where('users', 'array-contains', user.email);
-  const [chatsSnapshot] = useCollection(userChats);
+  const userChats = db.collection('chats');
+  const userChatsOrdered = userChats.where('users', 'array-contains', user.email);
+
+  // .orderBy('lastSent', 'desc');
+
+  // trying to use where and orderBy together just does not work. cant find an answer.
+
+  const [chatsSnapshot] = useCollection(userChatsOrdered);
 
   const { colorMode, toggleColorMode } = useColorMode();
 
   const router = useRouter();
-
-  console.log(router.query.id);
 
   const isExistingChat = (recipient) => {
     return !!chatsSnapshot?.docs.find(
@@ -39,10 +44,14 @@ const Sidebar = () => {
     if (EmailValidator.validate(input) && input !== user.email && !isExistingChat(input)) {
       db.collection('chats').add({
         users: [user.email, input],
+        lastSent: firebase.firestore.FieldValue.serverTimestamp(),
       });
     }
   };
 
+  const chatPreviews = chatsSnapshot?.docs.map((chat) => (
+    <Chat key={chat.id} id={chat.id} users={chat.data().users} />
+  ));
   return (
     <Flex
       direction="column"
@@ -111,9 +120,7 @@ const Sidebar = () => {
             new chat
           </Button>
         </Flex>
-        {chatsSnapshot?.docs.map((chat) => (
-          <Chat key={chat.id} id={chat.id} users={chat.data().users} />
-        ))}
+        {chatPreviews}
       </Flex>
     </Flex>
   );

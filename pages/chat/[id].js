@@ -63,6 +63,7 @@ export async function getServerSideProps(context) {
   const chat = {
     id: chatRes.id,
     ...chatRes.data(),
+    lastSent: JSON.stringify(chatRes.data().lastSent),
   };
 
   return {
