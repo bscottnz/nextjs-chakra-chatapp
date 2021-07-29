@@ -164,14 +164,7 @@ const ChatPage = ({ chat, messages }) => {
           {/* scroll target empty div */}
         </Box>
       </Box>
-      <FormControl
-        p={2}
-        // position="sticky"
-        // bottom={0}
-        zIndex={3}
-        as="form"
-        bg={colorMode === 'light' ? 'white' : 'gray.800'}
-      >
+      <FormControl p={2} zIndex={3} as="form">
         <Input
           position="sticky"
           bottom={0}

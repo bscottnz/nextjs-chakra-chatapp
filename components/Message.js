@@ -28,14 +28,16 @@ const Message = ({ user, message }) => {
           w="fit-content"
           p={4}
           rounded="md"
-          margin={3}
+          margin={2}
           ml="auto"
-          minW="60px"
+          maxW="80%"
           pb={6}
           position="relative"
           textAlign="right"
           wordBreak="break-word"
           bg={colorMode === 'light' ? 'teal.600' : 'teal.500'}
+          minW="71px"
+          color="white"
         >
           {' '}
           {message.message}
@@ -43,11 +45,11 @@ const Message = ({ user, message }) => {
           <Text
             as="span"
             as="span"
-            color="gray"
+            color="white"
             p={4}
             fontSize="9px"
             position="absolute"
-            bottom="0"
+            bottom="-2px"
             textAlign="right"
             right="0"
           >
@@ -59,25 +61,26 @@ const Message = ({ user, message }) => {
           w="fit-content"
           p={4}
           rounded="md"
-          margin={3}
-          minW="60px"
+          margin={2}
+          minW="71px"
+          maxW="80%"
           pb={6}
           position="relative"
           textAlign="left"
           wordBreak="break-word"
-          bg={colorMode === 'light' ? 'gray.600' : 'gray.500'}
+          bg={colorMode === 'light' ? 'gray.300' : 'gray.500'}
         >
           {' '}
           {message.message}
           <Text
             as="span"
-            color="gray"
+            color={colorMode === 'light' ? 'black' : 'white'}
             p={4}
             fontSize="9px"
             position="absolute"
-            bottom="0"
+            bottom="-2px"
             textAlign="right"
-            right="0"
+            left="0"
           >
             {moment(message.timestamp).format('LT')}
           </Text>
