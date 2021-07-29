@@ -1,14 +1,6 @@
 import { Flex, Stack } from '@chakra-ui/layout';
-import {
-  Avatar,
-  IconButton,
-  Button,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Icon,
-} from '@chakra-ui/react';
-import { ChatIcon, ChevronDownIcon, MoonIcon, SunIcon, Search2Icon } from '@chakra-ui/icons';
+import { Avatar, IconButton, Button, Icon } from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { FiLogOut } from 'react-icons/fi';
 

@@ -4,18 +4,19 @@ import {
   IconButton,
   Button,
   Input,
-  InputGroup,
-  InputLeftElement,
   Box,
   Heading,
   Text,
   FormControl,
+  Icon,
 } from '@chakra-ui/react';
 import { useColorMode } from '@chakra-ui/color-mode';
 import { useRouter } from 'next/router';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebaseconfig';
 import { useCollection } from 'react-firebase-hooks/firestore';
+
+import { RiSendPlaneFill } from 'react-icons/ri';
 
 import Message from './Message';
 import { useState, useRef, useEffect } from 'react';
@@ -164,12 +165,20 @@ const ChatPage = ({ chat, messages }) => {
           {/* scroll target empty div */}
         </Box>
       </Box>
-      <FormControl p={2} zIndex={3} as="form">
+      <FormControl p={2} zIndex={3} as="form" display="flex" alignItems="centre">
         <Input
           position="sticky"
           bottom={0}
           value={input}
           onChange={(e) => setInput(e.target.value)}
+        />
+        <IconButton
+          ml={2}
+          onClick={sendMessage}
+          icon={<Icon as={RiSendPlaneFill} />}
+          _focus={{ boxShadow: 'none' }}
+          size="md"
+          isRound
         />
         <Button hidden disabled={!input} type="submit" onClick={sendMessage}>
           send
