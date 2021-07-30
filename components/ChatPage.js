@@ -82,6 +82,9 @@ const ChatPage = ({ chat, messages }) => {
 
   const sendMessage = (e) => {
     e.preventDefault();
+    if (input.trim() === '') {
+      return;
+    }
     db.collection('users').doc(user.uid).set(
       {
         lastActive: firebase.firestore.FieldValue.serverTimestamp(),
@@ -149,7 +152,6 @@ const ChatPage = ({ chat, messages }) => {
             </Text>
           )}
         </Box>
-        <Box>video</Box>
       </Flex>
       <Box
         id="msg-box"
