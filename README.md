@@ -7,4 +7,4 @@ Chakra Chat is a basic instant messaging app built to practice Next.JS Firebase 
  
 
 
-![lifeinvader-demo](https://user-images.githubusercontent.com/24649589/122633458-eecb5000-d12c-11eb-9674-3ec9e8f4c864.gif)
+![screenshot](https://raw.githubusercontent.com/bscottnz/portfolio-site/main/src/assets/chatapp.png)
