@@ -3,7 +3,7 @@
 
 ---
 
-Chakra Chat is a basic instant messaging app built to practice Next.JS Firebase and Chakra UI. Sign in using Google account.
+Chakra Chat is a basic instant messaging app built to practice Next.JS, Firebase and Chakra UI. Sign in using Google account.
 
 Features dark / light theme toggling.
  
